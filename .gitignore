@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Skill data (should not be committed)
+tasks.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# OpenClaw workspace
+.workspace/

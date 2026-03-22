@@ -1,0 +1,42 @@
+// 复制到 ~/.openclaw/cron/jobs.json
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "daily-reminder-checker",
+      "description": "每分钟检查是否有需要发送的飞书提醒",
+      "schedule": {
+        "kind": "cron",
+        "expr": "* * * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "payload": {
+        "kind": "agentTurn",
+        "message": "__CRON_CHECK__",
+        "deliver": false
+      },
+      "session": {
+        "kind": "isolated"
+      },
+      "enabled": true
+    },
+    {
+      "id": "daily-reminder-midnight-clear",
+      "description": "每天0点清空任务列表",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 0 * * *",
+        "tz": "Asia/Shanghai"
+      },
+      "payload": {
+        "kind": "agentTurn",
+        "message": "__MIDNIGHT_CLEAR__",
+        "deliver": false
+      },
+      "session": {
+        "kind": "isolated"
+      },
+      "enabled": true
+    }
+  ]
+}

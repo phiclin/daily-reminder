@@ -1,0 +1,10 @@
+// 添加到 ~/.openclaw/openclaw.json 的 skills.entries 中
+{
+  "skills": {
+    "entries": {
+      "daily-reminder": {
+        "enabled": true
+      }
+    }
+  }
+}
