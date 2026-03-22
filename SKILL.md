@@ -220,12 +220,12 @@ description: 每日提醒技能。当用户说"开始每日提醒"时激活，�
 
 ## reminder-checker 逻辑（每分钟执行）
 
-当 cron 每分钟触发本 skill 时，传入消息为 `__CRON_CHECK__`（约定标记）。
+**cron job 触发方式**：cron 配置为 `systemEvent` 类型，`text` 字段携带触发标记。
 
 此时 skill 执行以下逻辑：
 
 ```
-IF 消息内容 == "__CRON_CHECK__":
+IF 消息内容 == "__DAILY_REMINDER_CHECK__":
     读取 tasks.json
     IF date != 今天:
         # 跨天了，任务作废，跳过
@@ -255,22 +255,24 @@ IF 消息内容 == "__CRON_CHECK__":
 
 ## 0点清理逻辑
 
-在每天 00:00 触发的 cron job 中：
+**cron job 触发方式**：00:00 cron 发送 `__DAILY_REMINDER_CLEAR__` systemEvent。
 
 ```
-读取 tasks.json
-IF date != 今天:
-    # 已经清理过，直接写一个今日空任务
-    写 tasks.json { date: 今天, active: false, tasks: [] }
-    RETURN
+IF 消息内容 == "__DAILY_REMINDER_CLEAR__":
+    读取 tasks.json
+    IF date != 今天:
+        # 已经清理过，直接写一个今日空任务
+        写 tasks.json { date: 今天, active: false, tasks: [] }
+        RETURN
 
-# date == 今天，说明上次是昨天开的提醒
-IF active == true:
-    发送飞书："🌙 今日提醒已结束，所有任务已清空"
-设置 tasks = []
-active = false
-date = 今天
-写回 tasks.json
+    # date == 今天，说明上次是昨天开的提醒
+    IF active == true:
+        发送飞书："🌙 今日提醒已结束，所有任务已清空"
+    设置 tasks = []
+    active = false
+    date = 今天
+    写回 tasks.json
+    RETURN
 ```
 
 ## 按钮回调处理
